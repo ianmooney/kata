@@ -4,7 +4,7 @@ class Word
 
   class << self
     
-    def words_file_name
+    def file_name
       File.expand_path('../WordList.txt', File.dirname(__FILE__))
     end
     
@@ -27,7 +27,7 @@ class Word
     private
     def words_from_file
       word_array = []
-      File.open(words_file_name, "r").each_line do |line|
+      File.open(file_name, "r").each_line do |line|
         if line.strip! != '' && line.length <= Word::MAX_LETTERS
           word_array << Word.new(:name => line)
         end
@@ -44,8 +44,7 @@ class Word
   end
 
   def made_of_sub_words?
-    return false if sub_words.empty?
-    name.gsub(/#{sub_words.collect(&:name).join('|')}/, '') == ''
+    !sub_words.empty?
   end
 
   def letter_count
