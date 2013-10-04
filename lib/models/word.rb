@@ -20,6 +20,10 @@ class Word
       @short_words ||= all.select(&:short_word?)
     end
     
+    def words_with_sub_words
+      @words_with_sub_words ||= all.select(&:made_of_sub_words?)
+    end
+
     private
     def words_from_file
       word_array = []
