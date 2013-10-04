@@ -9,7 +9,7 @@ class Word
     end
     
     def all
-      @all_words ||= words_from_file.collect {|w| Word.new(:name => w)}
+      @all ||= words_from_file
     end
     
     def long
@@ -27,9 +27,9 @@ class Word
     private
     def words_from_file
       word_array = []
-      File.open(words_file_name, "r").each_line do |word|
-        if word.strip! != '' && word.length <= Word::MAX_LETTERS
-          word_array << word
+      File.open(words_file_name, "r").each_line do |line|
+        if line.strip! != '' && line.length <= Word::MAX_LETTERS
+          word_array << Word.new(:name => line)
         end
       end
       word_array.compact
@@ -72,16 +72,14 @@ class Word
 
   private
   def find_sub_words
-    name_dup = name.dup
-    sub_words_arr = []
+    sub_words = []
     Word.short.each do |short_word|
-      if name_dup.match(short_word.name)
-        sub_words_arr << short_word
-        name_dup.gsub!(short_word.name, '')
+      if name.match(short_word.name)
+        sub_words << short_word
       end
-      break if name_dup == ''
+      break if sub_words.length == 2
     end
-    sub_words_arr
+    sub_words
   end
 
 end
