@@ -24,6 +24,11 @@ class Word
       @with_sub_words ||= all.select(&:made_of_sub_words?)
     end
 
+    def with_letter_count(count)
+      @grouped_by_letter_count ||= all.group_by(&:letter_count)
+      @grouped_by_letter_count[count]
+    end
+
     private
     def words_from_file
       word_array = []
@@ -41,6 +46,10 @@ class Word
     attrs.each do |attr, value|
       send("#{attr}=", value)
     end
+  end
+
+  def ==(value)
+    name == value
   end
 
   def made_of_sub_words?
@@ -71,14 +80,16 @@ class Word
 
   private
   def find_sub_words
-    sub_words = []
-    Word.short.each do |short_word|
-      if name.match(short_word.name)
-        sub_words << short_word
+    Word.short.each do |word|
+      if name.match(/^#{word.name}/)
+        second_word = name.sub(/^#{word.name}/, '')
+        words = Word.with_letter_count(second_word.length)
+        if words && words.include?(second_word)
+          return [word, Word.new(:name => second_word)]
+        end
       end
-      break if sub_words.length == 2
     end
-    sub_words
+    []
   end
 
 end
