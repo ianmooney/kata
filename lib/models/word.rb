@@ -8,16 +8,16 @@ class Word
       File.expand_path('../WordList.txt', File.dirname(__FILE__))
     end
     
-    def word_array
-      @word_array ||= words_from_file.collect {|w| Word.new(:name => w)}
+    def all
+      @all_words ||= words_from_file.collect {|w| Word.new(:name => w)}
     end
     
     def long_words
-      @long_words ||= word_array.select(&:long_word?)
+      @long_words ||= all.select(&:long_word?)
     end
     
     def short_words
-      @short_words ||= word_array.select(&:short_word?)
+      @short_words ||= all.select(&:short_word?)
     end
     
     private
