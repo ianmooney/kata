@@ -51,42 +51,42 @@ describe Word do
     
   end
 
-  describe '::long_words' do
+  describe '::long' do
   
     it 'is only long words' do
-      letter_counts = Word.long_words.collect(&:letter_count)
+      letter_counts = Word.long.collect(&:letter_count)
       expect(letter_counts.uniq).to eq([Word::MAX_LETTERS])
     end
     
     it 'is all long words' do
-      expect(Word.long_words.count).to eq(10)
+      expect(Word.long.count).to eq(10)
     end
 
   end
   
-  describe '::short_words' do
+  describe '::short' do
   
     it 'is only short words' do
-      letter_counts = Word.short_words.collect(&:letter_count)
+      letter_counts = Word.short.collect(&:letter_count)
       expect(letter_counts.uniq - [1,2,3,4,5]).to eq([])
     end
     
     it 'is all short words' do
-      expect(Word.short_words.count).to eq(16)
+      expect(Word.short.count).to eq(16)
     end
 
   end
 
-  describe '::words_with_sub_words' do
+  describe '::with_sub_words' do
 
     it 'is only words with sub words' do
-      regex = /#{Word.short_words.collect(&:name).join('|')}/
-      without_sub_words = Word.words_with_sub_words.collect {|w| w.name.gsub(regex, '')}
+      regex = /#{Word.short.collect(&:name).join('|')}/
+      without_sub_words = Word.with_sub_words.collect {|w| w.name.gsub(regex, '')}
       expect(without_sub_words.uniq).to eq([''])
     end
 
     it 'is all words with sub words' do
-      expect(Word.words_with_sub_words.count).to eq(8)
+      expect(Word.with_sub_words.count).to eq(8)
     end
 
   end
