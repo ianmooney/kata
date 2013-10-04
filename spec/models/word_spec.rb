@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Word do
 
   before do
-    Word.stub(:words_file_name).and_return File.expand_path('../WordList-test.txt', File.dirname(__FILE__))
+    Word.stub(:file_name).and_return File.expand_path('../WordList-test.txt', File.dirname(__FILE__))
   end
   
   subject(:word) { Word.new }
