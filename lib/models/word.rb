@@ -44,8 +44,7 @@ class Word
   end
 
   def made_of_sub_words?
-    return false if sub_words.empty?
-    name.gsub(/#{sub_words.collect(&:name).join('|')}/, '') == ''
+    !sub_words.empty?
   end
 
   def letter_count
