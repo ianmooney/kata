@@ -2,6 +2,6 @@
 
 require './lib/boot.rb'
 
-Word.word_array.each do |word|
+Word.all.each do |word|
   puts word if word.made_of_sub_words?
 end
