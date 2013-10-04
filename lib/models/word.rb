@@ -12,16 +12,16 @@ class Word
       @all_words ||= words_from_file.collect {|w| Word.new(:name => w)}
     end
     
-    def long_words
-      @long_words ||= all.select(&:long_word?)
+    def long
+      @long ||= all.select(&:long?)
     end
     
-    def short_words
-      @short_words ||= all.select(&:short_word?)
+    def short
+      @short ||= all.select(&:short?)
     end
     
-    def words_with_sub_words
-      @words_with_sub_words ||= all.select(&:made_of_sub_words?)
+    def with_sub_words
+      @with_sub_words ||= all.select(&:made_of_sub_words?)
     end
 
     private
@@ -52,21 +52,21 @@ class Word
     name.to_s.length
   end
 
-  def long_word?
+  def long?
     letter_count == Word::MAX_LETTERS
   end
   
-  def short_word?
+  def short?
     letter_count < Word::MAX_LETTERS
   end
 
   def sub_words
-    return [] if short_word?
+    return [] if short?
     @sub_words ||= find_sub_words
   end
 
   def to_s
-    return name if short_word?
+    return name if short?
     "#{name} (#{sub_words.collect(&:name).join(' + ')})"
   end
 
@@ -74,7 +74,7 @@ class Word
   def find_sub_words
     name_dup = name.dup
     sub_words_arr = []
-    Word.short_words.each do |short_word|
+    Word.short.each do |short_word|
       if name_dup.match(short_word.name)
         sub_words_arr << short_word
         name_dup.gsub!(short_word.name, '')
