@@ -73,6 +73,10 @@ class Word
     @sub_words ||= find_sub_words
   end
 
+  def starts_with?(word)
+    name[0..word.letter_count-1] == word.name
+  end
+
   def to_s
     return name if short?
     "#{name} (#{sub_words.collect(&:name).join(' + ')})"
@@ -81,11 +85,11 @@ class Word
   private
   def find_sub_words
     Word.short.each do |word|
-      if name.match(/^#{word.name}/)
-        second_word = name.sub(/^#{word.name}/, '')
-        words = Word.with_letter_count(second_word.length)
-        if words && words.include?(second_word)
-          return [word, Word.new(:name => second_word)]
+      if starts_with?(word)
+        suffix = name[word.letter_count..name.length-1]
+        words = Word.with_letter_count(suffix.length)
+        if words && words.include?(suffix)
+          return [word, Word.new(:name => suffix)]
         end
       end
     end
