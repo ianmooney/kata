@@ -19,49 +19,8 @@ class Word
     def sub_words
       @sub_words ||= all.select(&:sub_word?)
     end
-    
-    # fast
-    # def concatenated_words
-    #   words = []
-    #   long_words.each do |word|
-    #     Word.sub_words.each do |sub_word|
-    #       if word.starts_with?(sub_word)
-    #         suffix = word.name[sub_word.length..word.length-1]
-    #         if Word.with_length(suffix.length).include?(suffix)
-    #           word.sub_words = [sub_word, Word.new(:name => suffix)]
-    #           words << word
-    #         end
-    #       end
-    #     end
-    #   end
-    #   words
-    # end
-
-    # readable
-    def concatenated_words
-      words = []
-      sub_words.each do |sub_word|
-        words_that_start_with(sub_word).each do |word|
-          suffix = word.name[sub_word.length..word.name.length-1]
-          if Word.sub_words.include?(suffix)
-            word.sub_words = [sub_word, Word.new(:name => suffix)]
-            words << word
-          end
-        end
-      end
-      words
-    end
-
-    def with_length(length)
-      @grouped_by_length ||= all.group_by(&:length)
-      @grouped_by_length[length] || []
-    end
 
     private
-    def words_that_start_with(sub_word)
-      long_words.select {|w| w.starts_with?(sub_word)}
-    end
-
     def words_from_file
       word_array = []
       File.open(file_name, "r").each_line do |line|

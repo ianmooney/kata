@@ -77,17 +77,4 @@ describe Word do
 
   end
 
-  describe '::concatenated_words' do
-
-    it 'is only words with sub words' do
-      all_names_match_sub_word = Word.concatenated_words.all? {|w| w.name == w.sub_words.join}
-      expect(all_names_match_sub_word).to be_true
-    end
-
-    it 'is all words with sub words' do
-      expect(Word.concatenated_words.count).to eq(8)
-    end
-
-  end
-
 end
