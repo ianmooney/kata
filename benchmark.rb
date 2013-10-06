@@ -2,7 +2,9 @@
 
 require './lib/boot.rb'
 
+FastFinder.suppress_output = true
+
 Benchmark.bm do |x|
-  x.report('Readable:') { ReadableWordFinder.concatenated_words }
-  x.report('Fast:') { FastWordFinder.concatenated_words }
+  x.report('Readable:') { Word.concatenated_words }
+  x.report('Fast:') { FastFinder.concatenated_words }
 end
