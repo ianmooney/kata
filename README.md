@@ -6,9 +6,9 @@
 
   ./run.rb fast
   
-### 3. Extenible
+### 3. Extendible
 
-  ./run.rb fast [word length] [text file]
+  ./run.rb [word length] [text file]
   
   e.g.
   
