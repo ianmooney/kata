@@ -30,8 +30,8 @@ class FastFinder
     def read_words_from_file
       long_words, sub_words, grouped_by_length = [[], [], {}]
       File.open(file_name, "r").each_line do |line|
-        if line.strip! != '' && line.length <= FastFinder::MAX_LETTERS
-          if line.length == FastFinder::MAX_LETTERS
+        if line.strip! != '' && line.length <= FastFinder::MAX_LENGTH
+          if line.length == FastFinder::MAX_LENGTH
             long_words << line
           else
             sub_words << line
@@ -47,4 +47,4 @@ class FastFinder
 
 end
 
-FastFinder::MAX_LETTERS = 6
+FastFinder::MAX_LENGTH = 6

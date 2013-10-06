@@ -27,5 +27,6 @@ by
 saw
 or
 aver
+vexed
 
-longerword
+convexed

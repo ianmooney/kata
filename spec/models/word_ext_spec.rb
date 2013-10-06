@@ -1,8 +1,9 @@
 require 'spec_helper'
 
-describe Word do
+describe WordExt do
 
   before do
+    class Word; include WordExt; end
     Word.stub(:file_name).and_return File.expand_path('../WordList-test.txt', File.dirname(__FILE__))
   end
 
@@ -55,7 +56,7 @@ describe Word do
   
     it 'is only long words' do
       word_lengths = Word.long_words.collect(&:length)
-      expect(word_lengths.uniq).to eq([Word::MAX_LETTERS])
+      expect(word_lengths.uniq).to eq([Word.max_length])
     end
     
     it 'is all long words' do
@@ -72,7 +73,7 @@ describe Word do
     end
     
     it 'is all sub words' do
-      expect(Word.sub_words.count).to eq(16)
+      expect(Word.sub_words.count).to eq(17)
     end
 
   end

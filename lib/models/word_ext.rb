@@ -1,8 +1,11 @@
-class Word
+module WordExt
   
-  attr_accessor :name
+  def self.included(base)
+    base.send(:attr_accessor, :name)
+    base.extend ClassMethods
+  end
 
-  class << self
+  module ClassMethods
     
     def all
       @all ||= words_from_file
@@ -16,6 +19,10 @@ class Word
       @long_words ||= all.select(&:long?)
     end
     
+    def max_length
+      6
+    end
+    
     def sub_words
       @sub_words ||= all.select(&:sub_word?)
     end
@@ -26,10 +33,9 @@ class Word
     end
 
     def print_words
-      words = Word.concatenated_words
-      puts "Found #{words.count} concatenated words:"
+      puts "Found #{concatenated_words.count} concatenated words:"
       puts ''
-      words.each do |word|
+      concatenated_words.each do |word|
         puts word.print
       end
     end
@@ -42,8 +48,8 @@ class Word
     def words_from_file
       word_array = []
       File.open(file_name, "r").each_line do |line|
-        if line.strip! != '' && line.length <= Word::MAX_LETTERS
-          word_array << Word.new(:name => line)
+        if line.strip! != '' && line.length <= max_length
+          word_array << new(:name => line)
         end
       end
       word_array.compact
@@ -70,11 +76,11 @@ class Word
   end
 
   def long?
-    length == Word::MAX_LETTERS
+    length == self.class.max_length
   end
   
   def sub_word?
-    length < Word::MAX_LETTERS
+    length < self.class.max_length
   end
 
   def starts_with?(word)
@@ -97,11 +103,11 @@ class Word
 
   private
   def find_sub_words
-    Word.sub_words.each do |sub_word|
+    self.class.sub_words.each do |sub_word|
       if self.starts_with?(sub_word)
         suffix = name[sub_word.length..self.length-1]
-        if Word.with_length(suffix.length).include?(suffix)
-          return [sub_word, Word.new(:name => suffix)]
+        if self.class.with_length(suffix.length).include?(suffix)
+          return [sub_word, self.class.new(:name => suffix)]
         end
       end
     end
@@ -109,5 +115,3 @@ class Word
   end
 
 end
-
-Word::MAX_LETTERS = 6

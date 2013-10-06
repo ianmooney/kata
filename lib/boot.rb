@@ -1,3 +1,3 @@
 require 'benchmark'
 
-Dir['./lib/models/*'].each {|file| require file }
+Dir['./lib/models/*.rb', './lib/models/**/*.rb'].each {|file| require file }
