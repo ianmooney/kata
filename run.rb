@@ -3,10 +3,4 @@
 require './lib/boot.rb'
 
 FastFinder.concatenated_words
-
-# words = Word.concatenated_words
-# puts "Found #{words.count} concatenated words:"
-# puts ''
-# words.each do |word|
-#   puts word.print
-# end
+# Word.print_words

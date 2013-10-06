@@ -24,7 +24,7 @@ class FastFinder
 
     private
     def file_name
-      File.expand_path('../WordList.txt', File.dirname(__FILE__))
+      File.expand_path('../WordList-sample.txt', File.dirname(__FILE__))
     end
     
     def read_words_from_file

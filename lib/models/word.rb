@@ -20,9 +20,23 @@ class Word
       @sub_words ||= all.select(&:sub_word?)
     end
 
+    def with_length(length)
+      @grouped_by_length ||= sub_words.group_by(&:length)
+      @grouped_by_length[length] || []
+    end
+
+    def print_words
+      words = Word.concatenated_words
+      puts "Found #{words.count} concatenated words:"
+      puts ''
+      words.each do |word|
+        puts word.print
+      end
+    end
+
     private
     def file_name
-      File.expand_path('../WordList.txt', File.dirname(__FILE__))
+      File.expand_path('../WordList-sample.txt', File.dirname(__FILE__))
     end
 
     def words_from_file
@@ -86,7 +100,7 @@ class Word
     Word.sub_words.each do |sub_word|
       if self.starts_with?(sub_word)
         suffix = name[sub_word.length..self.length-1]
-        if Word.sub_words.include?(suffix)
+        if Word.with_length(suffix.length).include?(suffix)
           return [sub_word, Word.new(:name => suffix)]
         end
       end
