@@ -1,11 +1,11 @@
 class Word
   
-  attr_accessor :name
+  attr_accessor :name, :sub_words
 
   class << self
     
     def file_name
-      File.expand_path('../WordList.txt', File.dirname(__FILE__))
+      File.expand_path('../WordList-sample.txt', File.dirname(__FILE__))
     end
     
     def all
@@ -20,6 +20,24 @@ class Word
       @sub_words ||= all.select(&:sub_word?)
     end
     
+    # fast
+    # def concatenated_words
+    #   words = []
+    #   long_words.each do |word|
+    #     Word.sub_words.each do |sub_word|
+    #       if word.starts_with?(sub_word)
+    #         suffix = word.name[sub_word.length..word.length-1]
+    #         if Word.with_length(suffix.length).include?(suffix)
+    #           word.sub_words = [sub_word, Word.new(:name => suffix)]
+    #           words << word
+    #         end
+    #       end
+    #     end
+    #   end
+    #   words
+    # end
+
+    # readable
     def concatenated_words
       words = []
       sub_words.each do |sub_word|
@@ -34,9 +52,9 @@ class Word
       words
     end
 
-    def with_letter_count(count)
-      @grouped_by_letter_count ||= all.group_by(&:letter_count)
-      @grouped_by_letter_count[count]
+    def with_length(length)
+      @grouped_by_length ||= all.group_by(&:length)
+      @grouped_by_length[length] || []
     end
 
     private
@@ -66,6 +84,10 @@ class Word
     name == value
   end
 
+  def concatenated_word?
+    !sub_words.empty?
+  end
+
   def length
     name.to_s.length
   end
@@ -82,23 +104,17 @@ class Word
     name[0..word.length-1] == word.name
   end
 
-  def to_s
-    return name if sub_words.nil?
-    "#{name} (#{sub_words.collect(&:name).join(' + ')})"
+  def sub_words
+    @sub_words || []
   end
 
-  private
-  def find_sub_words
-    Word.short.each do |word|
-      if starts_with?(word)
-        suffix = name[word.letter_count..name.length-1]
-        words = Word.with_letter_count(suffix.length)
-        if words && words.include?(suffix)
-          return [word, Word.new(:name => suffix)]
-        end
-      end
-    end
-    []
+  def to_s
+    name
+  end
+
+  def print
+    return name if sub_words.nil?
+    "#{name} (#{sub_words.collect(&:name).join(' + ')})"
   end
 
 end
