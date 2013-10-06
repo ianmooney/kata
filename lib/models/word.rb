@@ -12,19 +12,33 @@ class Word
       @all ||= words_from_file
     end
     
-    def long
-      @long ||= all.select(&:long?)
+    def long_words
+      @long_words ||= all.select(&:long?)
     end
     
-    def short
-      @short ||= all.select(&:short?)
+    def sub_words
+      @sub_words ||= all.select(&:sub_word?)
     end
     
-    def with_sub_words
-      @with_sub_words ||= all.select(&:made_of_sub_words?)
+    def concatenated_words
+      words = []
+      sub_words.each do |sub_word|
+        words_that_start_with(sub_word).each do |word|
+          suffix = word.name[sub_word.length..word.name.length-1]
+          if Word.sub_words.include?(suffix)
+            word.sub_words = [sub_word, Word.new(:name => suffix)]
+            words << word
+          end
+        end
+      end
+      words
     end
 
     private
+    def words_that_start_with(sub_word)
+      long_words.select {|w| w.starts_with?(sub_word)}
+    end
+
     def words_from_file
       word_array = []
       File.open(file_name, "r").each_line do |line|
@@ -47,33 +61,24 @@ class Word
     name == value
   end
 
-  def made_of_sub_words?
-    !sub_words.empty?
-  end
-
-  def letter_count
+  def length
     name.to_s.length
   end
 
   def long?
-    letter_count == Word::MAX_LETTERS
+    length == Word::MAX_LETTERS
   end
   
-  def short?
-    letter_count < Word::MAX_LETTERS
-  end
-
-  def sub_words
-    return [] if short?
-    @sub_words ||= find_sub_words
+  def sub_word?
+    length < Word::MAX_LETTERS
   end
 
   def starts_with?(word)
-    name[0..word.letter_count-1] == word.name
+    name[0..word.length-1] == word.name
   end
 
   def to_s
-    return name if short?
+    return name if sub_words.nil?
     "#{name} (#{sub_words.collect(&:name).join(' + ')})"
   end
 

@@ -2,6 +2,9 @@
 
 require './lib/boot.rb'
 
-Word.all.each do |word|
-  puts word if word.made_of_sub_words?
+words = Word.concatenated_words
+puts "Found #{words.count} concatenated words."
+puts ''
+words.each do |word|
+  puts word
 end
