@@ -15,6 +15,7 @@ class FastFinder
             if words_with_correct_length && words_with_correct_length.include?(suffix)
               concatenated_words << [word, sub_word, suffix]
               puts "#{word} (#{sub_word} + #{suffix})" unless suppress_output
+              break
             end
           end
         end
